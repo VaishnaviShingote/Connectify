@@ -48,7 +48,7 @@ const Auth = () => {
                 text-opacity-90 border-b-2 rounded-none 
                 w-full data-[state=active]:text-black 
                 data-[state=active]:font-semibold data-[state=active]:
-                border-b-purple-500 border-s-rose-400 p-3 transition-all duration-300">Sign</TabsTrigger>
+                border-b-purple-500 border-s-rose-400 p-3 transition-all duration-300">Signup</TabsTrigger>
               </TabsList>
               <TabsContent className="flex flex-col gap-5 mt-10"
                value="login">
