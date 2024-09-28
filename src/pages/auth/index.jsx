@@ -4,6 +4,9 @@ import { Tabs, TabsList, TabsTrigger, TabsContent } from '@radix-ui/react-tabs';
 import { useState } from "react";
 import { Input } from "@/components/ui/input"; 
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { apiClient } from "@/lib/api-client";
+import { SIGNUP_ROUTE } from "@/utils/constants";
 
 
 const Auth = () => {
@@ -12,13 +15,30 @@ const Auth = () => {
   const [password, setPassword] = useState("");
   const [confirmPassword, setConfirmPassword] =useState("");
 
-
+  const validateSignup=()=>{
+    if(!email.length){
+      toast.error("Email is required");
+      return false;
+    }
+    if(!password.length){
+      toast.error("Password is required");
+      return false;
+    }
+    if(password!==confirmPassword){
+      toast.error("Passwords do not match");
+      return false;
+    }
+    return true;
+  };
   
   const handleLogin = async () => {
 
   }
   const handleSignup = async () => {
-    
+    if(validateSignup()){
+      const response = await apiClient.post(SIGNUP_ROUTE,{email,password});
+      console.log({response});
+    }
   }
 
   return (
