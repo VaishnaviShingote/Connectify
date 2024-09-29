@@ -8,7 +8,7 @@ import authRoutes from "./routes/AuthRoutes.js";
 dotenv.config(); //all environment variables will be in process.env
 
 const app =express();
-const port = process.env.PORT || 8747;
+const port = process.env.PORT || 3002;
 const databaseURL = process.env.DATABASE_URL;
 
 app.use(
@@ -27,6 +27,8 @@ app.use("/api/auth", authRoutes);
 
 const server=app.listen(port,()=>{
     console.log(`Server is running at http://localhost:${port}`);
+    console.log("CORS Origin:", process.env.ORIGIN);
+
 })
 
 mongoose

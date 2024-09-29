@@ -36,7 +36,7 @@ const userSchema = new mongoose.Schema({
 });
 
 userSchema.pre("save",async function(next){ //cant use arrow func as we are using this keyword
-    const salt= await genSalt();
+    const salt= await genSalt(10);
     this.password= await hash(this.password, salt);
     next();
 });
