@@ -15,7 +15,7 @@ app.use(
     cors({
         origin: [process.env.ORIGIN], //different origins for different frontends
         methods: ["GET","POST","PUT","PATCH","DELETE"],
-        credentials:true
+        credentials:true,
     })
 );
 
