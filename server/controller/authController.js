@@ -5,6 +5,8 @@ import dotenv from "dotenv";
 dotenv.config();
 
 const maxAge= 3*24*60*60*1000;
+//const maxAge = 3 * 1000; // 3 seconds in milliseconds
+
 console.log("JWT_KEY:", process.env.JWT_KEY);
 
 // const createToken = (email,userId) =>{
@@ -51,8 +53,7 @@ export const signup = async (req,res,next)=>{
         res.cookie("jwt", createToken(email, user.id),{
             maxAge,
             httpOnly: true,
-            secure:false,
-            sameSite:"None",
+            sameSite:"lax",
         });
         return res.status(201).json({
             user: {
@@ -85,8 +86,7 @@ export const login = async (req,res,next)=>{
         res.cookie("jwt",createToken(email,user.id),{
             maxAge,
             httpOnly:true,
-            secure:false,
-            sameSite:"None",
+            sameSite:"lax",
         });
         return res.status(200).json({
             user: {
@@ -112,6 +112,36 @@ export const getUserInfo = async (req,res,next)=>{
         if(!userData) {
             return res.status(404).send("User with the given id not found");
         }
+        return res.status(200).json({
+                id: userData.id,
+                email: userData.email,
+                profileSetup: userData.profileSetup,
+                firstName: userData.firstName,
+                lastName: userData.lastName,
+                image: userData.image,
+                color: userData.color,
+        });
+
+    } catch (error) {
+        console.log({error});
+        return res.status(500).send("Internal Server error");
+    };
+    
+};
+
+export const updateProfile = async (req,res,next)=>{
+    try{
+        const {userId} = req;
+        const {firstName, lastName, color} = req.body;
+        if(!firstName || !lastName){
+            return res.status(400).send("Complete your profile!")
+        }
+        const userData= await User.findByIdAndUpdate(userId,{
+            firstName,lastName,color,profileSetup:true
+        },{new:true, runValidators: true});
+        // if(!userData) {
+        //     return res.status(404).send("User with the given id not found");
+        // }
         return res.status(200).json({
                 id: userData.id,
                 email: userData.email,

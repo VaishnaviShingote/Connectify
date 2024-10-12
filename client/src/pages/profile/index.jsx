@@ -7,19 +7,51 @@ import { colors, getColor } from "@/lib/utils";
 import { FaPlus, FaTrash } from "react-icons/fa";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { toast } from "sonner";
+import { apiClient } from "@/lib/api-client";
+import { UPDATE_PROFILE_ROUTE } from "@/utils/constants";
 
 
 
 const Profile = () => {
   const navigate=useNavigate();
-  const {userInfo}= useAppStore();
+  const {userInfo, setUserInfo}= useAppStore();
   const [firstName, setFirstName]= useState("");
   const [lastName, setLastName]= useState("");
   const [image, setImage]= useState(null);
   const [hovered, setHovered]= useState(false);
   const [selectedColor, setSelectedColor]= useState(0);
 
-  const saveChanges = async() =>{};
+  const validateProfile = () =>{
+    if(!firstName){
+      toast.error("First Name is required.")
+      return false;
+    }
+    if(!lastName){
+      toast.error("Last Name is required.")
+      return false;
+    }
+    return true;
+  }
+  const saveChanges = async() =>{
+    if(validateProfile())
+    {
+      try{
+        const res=await apiClient.post(
+          UPDATE_PROFILE_ROUTE,
+          {firstName, lastName, color: selectedColor},
+          {withCredentials: true}
+        );
+        if(res.status===200 && res.data){
+          setUserInfo({...res.data});
+          toast.success("Profile updated successfully");
+          navigate("/chat");
+        }
+      }catch(error){
+        console.log(error);
+      }
+    }
+  };
 
   return (
     <div className="bg-[#1b1c24] h-[100vh] flex items-center justify-center flex-col gap-10">
